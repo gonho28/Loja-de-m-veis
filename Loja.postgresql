@@ -82,5 +82,8 @@ INSERT into Motorista
 Values (3900, 10037356211, 5678904234, 'Joealdo', 'Pilões'),
 (3874, 65478967896, 7896547898, 'Daniel Bobbie Goods', 'Guarabira'),
 (4453, 48755847463, 4543435677, 'Jordan Terrell Carter', 'Atlanta');
-
+INSERT into Venda 
+Values(12, 1300000.00, 75, 35),
+(87, 234.00, 23, 67),
+(25, 15000.00, 34, 70);
 

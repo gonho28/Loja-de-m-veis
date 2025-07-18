@@ -1,0 +1,86 @@
+CREATE TABLE Cliente(
+CodCli int primary key,
+Nome_ varchar(50),
+Tel char(10),
+Endereço varchar(100),
+CPF numeric(11),
+Email varchar(50)
+);
+
+CREATE TABLE Vendedor(
+Codvdd int primary KEY,
+CPF numeric(11),
+v_comissao numeric(4,2),
+Nome varchar(50),
+Endereço varchar(50)
+);
+
+CREATE TABLE Produto(
+Codpro int primary key,
+Custo numeric(11,2),
+Descrição text,
+Preço numeric(11,2),
+Nome varchar(50)
+);
+
+CREATE TABLE Motorista(
+CodMot int primary key,
+CPF numeric(11),
+CNH numeric(10),
+Nome varchar(50),
+Endereço varchar(50)
+);
+
+CREATE TABLE Veículo(
+Placa char primary key,
+Capacidade int
+);
+
+CREATE TABLE Venda(
+NumVen Int primary key,
+Valor_Total numeric(11,2),
+Codvdd int,
+CodCli int,
+foreign key(Codvdd) references Vendedor,
+foreign key (CodCli) references Cliente
+);
+
+CREATE TABLE Item_Venda(
+Codpro int,
+NumVen int,
+V_Unitario numeric(11,2),
+Qtd int,
+foreign key(Codpro) references Produto,
+foreign key(NumVen) references Venda
+);
+
+CREATE TABLE Entrega(
+Hora time not null,
+Data date not null,
+NumVen int,
+Placa char(7),
+CodMot int,
+primary key(Hora, Data),
+foreign key(NumVen) references Venda,
+foreign key(Placa) references Veículo,
+foreign key(CodMot) references Motorista
+);
+
+INSERT into Cliente
+Values (35, 'Júllya', 99666-9145, 'Tacima',1234233323, 'júllya.rodrigues@gmail.com'),
+(67, 'Kendrick Lamar', 67676-7676, 'Atlanta', 3872636432, 'mustardeugosto@gmail.com'),
+(70, 'Érika Trajano', 43728-4327, 'Araçagi', 3473482373, 'erikatrajano@gmail.com');
+INSERT into Vendedor
+Values (23, 2313122321, 43.00, 'Damiel', 'Guarabira'),
+(34, 1234567890, 34.00, 'Gibiei chamber', 'Cuitegi'),
+(75, 2121212121, 34.00, 'CS Saraiva Rodrigues', 'Tacimarabira');
+INSERT into Produto
+Values (567, 127.50, 'Fórmula pra curar a calvície', 234.00, 'Kit Manual'),
+(432, 9000.00, 'Roda até Oblivion com todos os shaders e GTA VI', 15000.00, 'Playstation 3,14115'),
+(568, 70000.00, 'Jatinho ultrassônico', 130000.00, 'Jatinho Bugatti');
+INSERT into Motorista
+Values (3900, 10037356211, 5678904234, 'Joealdo', 'Pilões'),
+(3874, 65478967896, 7896547898, 'Daniel Bobbie Goods', 'Guarabira'),
+(4453, 48755847463, 4543435677, 'Jordan Terrell Carter', 'Atlanta');
+
+

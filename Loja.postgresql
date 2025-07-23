@@ -75,7 +75,7 @@ INSERT into Vendedor
 Values (23, 2313122321, 43.00, 'Damiel', 'Guarabira'),
 (34, 1234567890, 34.00, 'Gibiei chamber', 'Cuitegi'),
 (75, 2121212121, 34.00, 'CS Saraiva Rodrigues', 'Tacimarabira'),
-(81, 9191919191, 89.90,NULL, 'Gurinhém');
+(81, 9191919191, NULL, 'João Física', 'Gurinhém');
 INSERT into Produto
 Values (567, 127.50, 'Gela até o inferno', 234.00, 'Geladeira da Elsa'),
 (432, 9000.00, 'Mesa de computador gamer', 15000.00, 'Mesa de Computador Ariele'),
@@ -130,8 +130,7 @@ SELECT c.Nome, v.Valor_Total AS "Gastos ao longo do tempo"
 FROM Cliente c 
 JOIN Venda v ON v.CodCli = c.CodCli;
 
-SELECT v.Valor_Total AS "Ganhou", ven.Nome
-FROM Venda v
+SELECT v.v_comissao AS "Ganhou", ven.Nome
+FROM Vendedor v
 RIGHT JOIN Vendedor ven ON v.Codvdd = ven.Codvdd
-
 

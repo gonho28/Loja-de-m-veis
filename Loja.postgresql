@@ -135,7 +135,3 @@ FROM Venda v
 RIGHT JOIN Vendedor ven ON v.Codvdd = ven.Codvdd
 
 
-
-(87, 234.00, 23, 67),
-(25, 15000.00, 34, 70);
-

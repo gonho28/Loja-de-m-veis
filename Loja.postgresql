@@ -244,6 +244,180 @@ INSERT into Cliente
 Values (35, 'Júllya', 99666-9145, 'Tacima',1234233323, 'júllya.rodrigues@gmail.com'),
 (67, 'Kendrick Lamar', 67676-7676, 'Atlanta', 3872636432, 'mustardeugosto@gmail.com'),
 (70, 'Érika Trajano', 43728-4327, 'Araçagi', 3473482373, 'erikatrajano@gmail.com'),
+(90, 'Pietro Pierre', 88712-1112, 'Itapororoca', 2719292312, NULL);
+
+INSERT into Vendedor
+Values (23, 2313122321, 43.00, 'Damiel', 'Guarabira'),
+(34, 1234567890, 34.00, 'Gibiei chamber', 'Cuitegi'),
+(75, 2121212121, 34.00, 'CS Saraiva Rodrigues', 'Tacimarabira'),
+(81, 9191919191, NULL, 'João Física', 'Gurinhém');
+INSERT into Produto
+Values (567, 127.50, 'Gela até o inferno', 234.00, 'Geladeira da Elsa'),
+(432, 9000.00, 'Mesa de computador gamer', 15000.00, 'Mesa de Computador Ariele'),
+(568, 70000.00, 'Cabe uma família de 20 pessoas', 130000.00, 'Sofá da Thais'),
+(543, 8282.91, 'Televisão de 90 polegadas', 193202.00, 'TV Microsoft');
+INSERT into Motorista
+Values (3900, 10037356211, 5678904234, 'Joealdo', 'Pilões'),
+(3874, 65478967896, 7896547898, 'Daniel Bobbie Goods', 'Guarabira'),
+(4453, 48755847463, 4543435677, 'Jordan Terrell Carter', 'Atlanta');
+INSERT into Veículo
+Values ('AN4G3RY', 7),
+('JGFNE24', 6),
+('DSMFDKN', 8),
+('HDBSBHB', 10),
+('JA1J9M9', 12);
+INSERT into Venda 
+Values(12, 1300000.00, 75, 35),
+(87, 234.00, 23, 67),
+(25, 15000.00, 34, 70),
+(82, 18222.00, 81, 90),
+(86, 234.00, 23, 70),
+(61, 1300000.00, 81, 70);
+INSERT into Item_Venda 
+Values(567, 12, 9220.00, 190),
+(432, 25, 90.0, 230),
+(568, 87, 61000.0, 100),
+(567, 82, 9020.0, 199),
+(432, 86, 90.0, 178),
+(567, 61, 9020.0, 123);
+INSERT into Entrega
+Values('19:45:20', '2025-07-19', 12, 'AN4G3RY', 3900),
+('14:03:06', '2025-06-11', 87, 'JGFNE24', 3874),
+('10:20:30', '2007-01-19', 25, 'DSMFDKN', 4453),
+('19:09:28', '2018-04-28', 82, 'HDBSBHB', 3900),
+('17:09:56', '2023-08-16', 86, 'DSMFDKN', 4453),
+('09:07:45', '2021-02-18', 61, 'JA1J9M9', 3874);
+
+
+SELECT it.NumVen AS "Número da venda", p.Nome AS "Produto", c.Nome AS "Cliente"
+From Item_Venda it 
+JOIN Venda v ON it.NumVen = v.NumVen
+JOIN Produto p ON it.CodPro = p.CodPro
+JOIN Cliente c ON v.CodCli = c.CodCli;
+
+SELECT m.CodMot AS "Código do motorista", m.Nome, e.data, e.hora
+FROM Motorista m 
+JOIN Entrega e ON m.CodMot = e.CodMot;
+
+
+SELECT v.Placa, m.Nome
+FROM Entrega e
+JOIN Veículo v ON v.Placa = e.Placa
+JOIN Motorista m ON m.CodMot = e.CodMot
+order by m.nome asc;
+
+SELECT c.Nome, sum(v.Valor_Total) AS "Gastos ao longo do tempo"
+FROM Cliente c 
+JOIN Venda v ON v.CodCli = c.CodCli
+group by c.Nome;
+
+SELECT vdd.Nome AS "Nome do Vendedor", SUM(it.Qtd * vdd.v_comissao) AS "Ganhou"
+FROM Item_Venda it
+JOIN Venda v on it.NumVen = v.NumVen
+JOIN Vendedor vdd on v.Codvdd = vdd.Codvdd
+group by vdd.nome
+order by vdd.nome asc;
+
+SELECT vdd.nome as "Nome do Vendedor", count(Valor_Total) as "Quantidade de vendas"
+from Venda Ven 
+Join Vendedor vdd on ven.Codvdd = vdd.Codvdd
+group by vdd.nome
+order by vdd.nome asc;
+
+SELECT e.codmot as "Código do Motorista",
+v.placa as "Placa do veículo",
+m.CNH as "CNH do Motorista",
+m.Nome as "Nome do Motorista"
+from Entrega e
+JOIN Motorista m on e.codmot = m.codmot
+JOIN Veículo v on e.placa = v.placa
+order by m.Nome desc;
+
+SELECT c.nome as "Nome do Cliente", v.nome "Nome do Vendedor", vdn.Valor_Total "Valor da compra"
+from Venda vdn
+JOIN Cliente c on c.codcli = vdn.codcli
+JOIN Vendedor v on v.codvdd = vdn.codvdd;
+
+SELECT c.nome as "Nome do Cliente", c.email as "Email do Cliente", vdn.NumVen "Número da Venda"
+from Cliente c
+join Venda vdn on c.codcli = vdn.codcli
+where email is not null;
+
+SELECT p.Nome as "Nome", p.descrição as "Descrição", it.V_Unitario as "Valor Unitário", it.Qtd as "Quantidades vendidas"
+from Produto p
+join Item_Venda it on p.codpro = it.codpro
+CREATE TABLE Cliente(
+CodCli int primary key,
+Nome varchar(50),
+Tel char(10),
+Endereço varchar(100),
+CPF numeric(11),
+Email varchar(50)
+);
+
+CREATE TABLE Vendedor(
+Codvdd int primary KEY,
+CPF numeric(11),
+v_comissao numeric(4,2),
+Nome varchar(50),
+Endereço varchar(50)
+);
+
+CREATE TABLE Produto(
+Codpro int primary key,
+Custo numeric(11,2),
+Descrição text,
+Preço numeric(11,2),
+Nome varchar(50)
+);
+
+CREATE TABLE Motorista(
+CodMot int primary key,
+CPF numeric(11),
+CNH numeric(10),
+Nome varchar(50),
+Endereço varchar(50)
+);
+
+CREATE TABLE Veículo(
+Placa char(7) primary key,
+Capacidade int
+);
+
+CREATE TABLE Venda(
+NumVen Int primary key,
+Valor_Total numeric(11,2),
+Codvdd int,
+CodCli int,
+foreign key(Codvdd) references Vendedor,
+foreign key (CodCli) references Cliente
+);
+
+CREATE TABLE Item_Venda(
+Codpro int,
+NumVen int,
+V_Unitario numeric(11,2),
+Qtd int,
+foreign key(Codpro) references Produto,
+foreign key(NumVen) references Venda
+);
+
+CREATE TABLE Entrega(
+Hora time NOT NULL,
+Data date not null,
+NumVen int,
+Placa char(7),
+CodMot int,
+primary key(Hora, Data),
+foreign key(NumVen) references Venda,
+foreign key(Placa) references Veículo,
+foreign key(CodMot) references Motorista
+);
+
+INSERT into Cliente
+Values (35, 'Júllya', 99666-9145, 'Tacima',1234233323, 'júllya.rodrigues@gmail.com'),
+(67, 'Kendrick Lamar', 67676-7676, 'Atlanta', 3872636432, 'mustardeugosto@gmail.com'),
+(70, 'Érika Trajano', 43728-4327, 'Araçagi', 3473482373, 'erikatrajano@gmail.com'),
 (90, 'Pietro Pierre', 88712-1112, 'Itapororoca', 2719292312, 'pedropiei@gmail.com');
 INSERT into Vendedor
 Values (23, 2313122321, 43.00, 'Damiel', 'Guarabira'),
@@ -307,4 +481,177 @@ JOIN Venda v ON v.CodCli = c.CodCli;
 SELECT v.v_comissao AS "Ganhou", ven.Nome
 FROM Vendedor v
 RIGHT JOIN Vendedor ven ON v.Codvdd = ven.Codvdd
+CREATE TABLE Cliente(
+CodCli int primary key,
+Nome varchar(50),
+Tel char(10),
+Endereço varchar(100),
+CPF numeric(11),
+Email varchar(50)
+);
 
+CREATE TABLE Vendedor(
+Codvdd int primary KEY,
+CPF numeric(11),
+v_comissao numeric(4,2),
+Nome varchar(50),
+Endereço varchar(50)
+);
+
+CREATE TABLE Produto(
+Codpro int primary key,
+Custo numeric(11,2),
+Descrição text,
+Preço numeric(11,2),
+Nome varchar(50)
+);
+
+CREATE TABLE Motorista(
+CodMot int primary key,
+CPF numeric(11),
+CNH numeric(10),
+Nome varchar(50),
+Endereço varchar(50)
+);
+
+CREATE TABLE Veículo(
+Placa char(7) primary key,
+Capacidade int
+);
+
+CREATE TABLE Venda(
+NumVen Int primary key,
+Valor_Total numeric(11,2),
+Codvdd int,
+CodCli int,
+foreign key(Codvdd) references Vendedor,
+foreign key (CodCli) references Cliente
+);
+
+CREATE TABLE Item_Venda(
+Codpro int,
+NumVen int,
+V_Unitario numeric(11,2),
+Qtd int,
+foreign key(Codpro) references Produto,
+foreign key(NumVen) references Venda
+);
+
+CREATE TABLE Entrega(
+Hora time NOT NULL,
+Data date not null,
+NumVen int,
+Placa char(7),
+CodMot int,
+primary key(Hora, Data),
+foreign key(NumVen) references Venda,
+foreign key(Placa) references Veículo,
+foreign key(CodMot) references Motorista
+);
+
+INSERT into Cliente
+Values (35, 'Júllya', 99666-9145, 'Tacima',1234233323, 'júllya.rodrigues@gmail.com'),
+(67, 'Kendrick Lamar', 67676-7676, 'Atlanta', 3872636432, 'mustardeugosto@gmail.com'),
+(70, 'Érika Trajano', 43728-4327, 'Araçagi', 3473482373, 'erikatrajano@gmail.com'),
+(90, 'Pietro Pierre', 88712-1112, 'Itapororoca', 2719292312, NULL);
+
+INSERT into Vendedor
+Values (23, 2313122321, 43.00, 'Damiel', 'Guarabira'),
+(34, 1234567890, 34.00, 'Gibiei chamber', 'Cuitegi'),
+(75, 2121212121, 34.00, 'CS Saraiva Rodrigues', 'Tacimarabira'),
+(81, 9191919191, NULL, 'João Física', 'Gurinhém');
+INSERT into Produto
+Values (567, 127.50, 'Gela até o inferno', 234.00, 'Geladeira da Elsa'),
+(432, 9000.00, 'Mesa de computador gamer', 15000.00, 'Mesa de Computador Ariele'),
+(568, 70000.00, 'Cabe uma família de 20 pessoas', 130000.00, 'Sofá da Thais'),
+(543, 8282.91, 'Televisão de 90 polegadas', 193202.00, 'TV Microsoft');
+INSERT into Motorista
+Values (3900, 10037356211, 5678904234, 'Joealdo', 'Pilões'),
+(3874, 65478967896, 7896547898, 'Daniel Bobbie Goods', 'Guarabira'),
+(4453, 48755847463, 4543435677, 'Jordan Terrell Carter', 'Atlanta');
+INSERT into Veículo
+Values ('AN4G3RY', 7),
+('JGFNE24', 6),
+('DSMFDKN', 8),
+('HDBSBHB', 10),
+('JA1J9M9', 12);
+INSERT into Venda 
+Values(12, 1300000.00, 75, 35),
+(87, 234.00, 23, 67),
+(25, 15000.00, 34, 70),
+(82, 18222.00, 81, 90),
+(86, 234.00, 23, 70),
+(61, 1300000.00, 81, 70);
+INSERT into Item_Venda 
+Values(567, 12, 9220.00, 190),
+(432, 25, 90.0, 230),
+(568, 87, 61000.0, 100),
+(567, 82, 9020.0, 199),
+(432, 86, 90.0, 178),
+(567, 61, 9020.0, 123);
+INSERT into Entrega
+Values('19:45:20', '2025-07-19', 12, 'AN4G3RY', 3900),
+('14:03:06', '2025-06-11', 87, 'JGFNE24', 3874),
+('10:20:30', '2007-01-19', 25, 'DSMFDKN', 4453),
+('19:09:28', '2018-04-28', 82, 'HDBSBHB', 3900),
+('17:09:56', '2023-08-16', 86, 'DSMFDKN', 4453),
+('09:07:45', '2021-02-18', 61, 'JA1J9M9', 3874);
+
+
+SELECT it.NumVen AS "Número da venda", p.Nome AS "Produto", c.Nome AS "Cliente"
+From Item_Venda it 
+JOIN Venda v ON it.NumVen = v.NumVen
+JOIN Produto p ON it.CodPro = p.CodPro
+JOIN Cliente c ON v.CodCli = c.CodCli;
+
+SELECT m.CodMot AS "Código do motorista", m.Nome, e.data, e.hora
+FROM Motorista m 
+JOIN Entrega e ON m.CodMot = e.CodMot;
+
+
+SELECT v.Placa, m.Nome
+FROM Entrega e
+JOIN Veículo v ON v.Placa = e.Placa
+JOIN Motorista m ON m.CodMot = e.CodMot
+order by m.nome asc;
+
+SELECT c.Nome, sum(v.Valor_Total) AS "Gastos ao longo do tempo"
+FROM Cliente c 
+JOIN Venda v ON v.CodCli = c.CodCli
+group by c.Nome;
+
+SELECT vdd.Nome AS "Nome do Vendedor", SUM(it.Qtd * vdd.v_comissao) AS "Ganhou"
+FROM Item_Venda it
+JOIN Venda v on it.NumVen = v.NumVen
+JOIN Vendedor vdd on v.Codvdd = vdd.Codvdd
+group by vdd.nome
+order by vdd.nome asc;
+
+SELECT vdd.nome as "Nome do Vendedor", count(Valor_Total) as "Quantidade de vendas"
+from Venda Ven 
+Join Vendedor vdd on ven.Codvdd = vdd.Codvdd
+group by vdd.nome
+order by vdd.nome asc;
+
+SELECT e.codmot as "Código do Motorista",
+v.placa as "Placa do veículo",
+m.CNH as "CNH do Motorista",
+m.Nome as "Nome do Motorista"
+from Entrega e
+JOIN Motorista m on e.codmot = m.codmot
+JOIN Veículo v on e.placa = v.placa
+order by m.Nome desc;
+
+SELECT c.nome as "Nome do Cliente", v.nome "Nome do Vendedor", vdn.Valor_Total "Valor da compra"
+from Venda vdn
+JOIN Cliente c on c.codcli = vdn.codcli
+JOIN Vendedor v on v.codvdd = vdn.codvdd;
+
+SELECT c.nome as "Nome do Cliente", c.email as "Email do Cliente", vdn.NumVen "Número da Venda"
+from Cliente c
+join Venda vdn on c.codcli = vdn.codcli
+where email is not null;
+
+SELECT p.Nome as "Nome", p.descrição as "Descrição", it.V_Unitario as "Valor Unitário", it.Qtd as "Quantidades vendidas"
+from Produto p
+join Item_Venda it on p.codpro = it.codpro
